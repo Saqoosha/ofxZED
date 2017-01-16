@@ -15,10 +15,13 @@ void ofxZED::init(bool useColorImage, bool useDepthImage, int cameraID, sl::zed:
 
 	ofLog() << "Initializing ZED camera." << std::endl;
 
-	zed = new sl::zed::Camera(resolution, fps);
+	zed = new sl::zed::Camera(resolution, fps, cameraID);
 	ofLog() << "Resolution Mode:" << resolution << std::endl;
 
-	sl::zed::ERRCODE zederr = zed->init(mode, cameraID, true, false, false);
+	sl::zed::InitParams params;
+	params.mode = mode;
+	params.verbose = true;
+	sl::zed::ERRCODE zederr = zed->init(params);
 
 	if (zederr != sl::zed::SUCCESS)
 	{
@@ -59,11 +62,11 @@ void ofxZED::update()
 {
 	if (bUseDepthImage)
 	{
-		zed->grab(sl::zed::SENSING_MODE::RAW, true, true);
+		zed->grab(sl::zed::SENSING_MODE::STANDARD, true, true);
 	}
 	else if(bUseColorImage)
 	{
-		zed->grab(sl::zed::SENSING_MODE::FULL, false, false);
+		zed->grab(sl::zed::SENSING_MODE::FILL, false, false);
 	}
 
 	if(bUseColorImage)
